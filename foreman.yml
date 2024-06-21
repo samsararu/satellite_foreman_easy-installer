@@ -12,11 +12,11 @@
     - theforeman.operations
 
   vars:
-   # Foreman Information
+   # Foreman Information (Use "katello" in def_scanerio if you want content and product)
     sat_user: "admin"
     sat_pass: "redhat"
-    sat_org: "ACME"
-    def_scenario: "foreman"
+    sat_org: "SOPHON"
+    def_scenario: "katello"
 
  
   tasks:
@@ -40,25 +40,40 @@
     # Adding the puppet repo, required for the installation
     - name: Installing Puppet Repository
       yum:
-        name: https://yum.puppet.com/puppet7-release-el-7.noarch.rpm
+        name: https://yum.puppet.com/puppet7-release-el-8.noarch.rpm
         state: present
-
-    # Adding some additional required repos as well
-    - name: Installing Required Packages, EPEL and SCL
-      yum:
-        name: epel-release,centos-release-scl-rh
-        state: present
+        disable_gpg_check: true # if gpg check creates problem
 
     # Installing the foreman repo
     - name: Installing Foreman Repository
       yum:
-        name: https://yum.theforeman.org/releases/3.3/el7/x86_64/foreman-release.rpm
+        name: https://yum.theforeman.org/releases/3.10/el8/x86_64/foreman-release.rpm
         state: present
+        disable_gpg_check: true
+
+    # Installing the katello
+    - name: Installing the Katello Repository
+      yum:
+        name: https://yum.theforeman.org/katello/4.12/katello/el8/x86_64/katello-repos-latest.rpm
+        state: present
+        disable_gpg_check: true
+
+    # Installing the module
+    - name: Enable the katello:el8
+      yum:
+        name: '@katello:el8'
+        state: present
+
+    # Update the system
+    - name: Update the system
+      yum:
+        name: "*"
+        state: latest # very careful here, if it is written "present" it throws error
 
     # Installing the foreman-installer package
     - name: Installing Foreman Package
       yum:
-        name: foreman-installer
+        name: foreman-installer-katello
         state: present
 
     # Calling the installer in fact, using the collection
