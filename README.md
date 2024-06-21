@@ -106,29 +106,29 @@ Ok, at this moment, the server that will be pushing all the packages and command
 
 - Install your destination server
 
-    For example, CentOS 7.9, with the IP address `10.10.10.10`
+    For example, Alma Linux 8.10, with the IP address `10.0.0.4`
 
 
-- Create the entry in the inventory.yml file
+- Create the entry in the inventory file
 
     Here you can see an example, add the ip address according to your target server
     ```
-    # cat inventory.yml 
+    # cat inventory
     [foreman01]
-    10.10.10.10
+    10.0.0.4
     ```
 
 - Copy your pub-key to the external server
 
     You can copy the pubkey using the ssh-copy-id command
     ```
-    # ssh-copy-id root@10.10.10.10
+    # ssh-copy-id root@10.0.0.4
     ```
 
     After this step, you should be able to run a command on the remote server with no necessity of password
 
     ```
-    # ssh root@10.10.10.10 hostname
+    # ssh root@10.0.0.4 hostname
     ```
 
     The response of the above command should be the remote hostname.
@@ -138,7 +138,7 @@ Ok, at this moment, the server that will be pushing all the packages and command
 
     You can call the playbook passing some parameters via `-e` flag, in this case, we will pass the server group name.
     ```
-    # ansible-playbook -i inventory.yml -e "server_group=foreman01" foreman.yml
+    # ansible-playbook -e "server_group=foreman01" foreman.yml
     ```
 
     This will install the foreman in the latest version in your target server.
@@ -146,13 +146,13 @@ Ok, at this moment, the server that will be pushing all the packages and command
 
     Here you can see an output example
     ```
-    (installer) satellite_foreman_easy-installer]# ansible-playbook -i inventory.yml -e "server_group=foreman01" foreman.yml
+    (installer) satellite_foreman_easy-installer]# ansible-playbook -e "server_group=foreman01" foreman.yml
     ...
     PLAY RECAP **********************************************************************************************************
-    10.10.10.10                : ok=12   changed=1    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+    10.0.0.4               : ok=12   changed=1    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
     ```
 
-    Once you get this output, you should be able to access your server via `https://10.10.10.10` and be able to authenticate in your fresh Foreman server.
+    Once you get this output, you should be able to access your server via `https://10.0.0.4` and be able to authenticate in your fresh Foreman server.
 
 
 ---
